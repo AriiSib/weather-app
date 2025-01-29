@@ -26,6 +26,8 @@ dependencies {
 
     implementation 'org.liquibase:liquibase-core:4.31.0'
 
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
     implementation 'com.fasterxml.jackson.core:jackson-core:2.18.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
 
@@ -38,6 +40,9 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
 
     testImplementation 'org.springframework:spring-test:6.0.12'
     testImplementation 'com.h2database:h2:2.2.220'
