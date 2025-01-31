@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="2" author="Artemii_Khokhlov">
+        <createTable tableName="locations">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="Artemii_Khokhlov">
+        <createTable tableName="users_locations">
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="users_locations" columnNames="user_id, location_id"
+                       constraintName="pk_users_locations"/>
+
+        <addForeignKeyConstraint baseTableName="users_locations" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_users_locations_user"/>
+        <addForeignKeyConstraint baseTableName="users_locations" baseColumnNames="location_id"
+                                 referencedTableName="locations" referencedColumnNames="id"
+                                 constraintName="fk_users_locations_location"/>
+    </changeSet>
+</databaseChangeLog>
