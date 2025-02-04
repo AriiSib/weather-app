@@ -5,6 +5,8 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="/db/changelog/version_1_0/initial_users.xml" relativeToChangelogFile="false"/>
+    <include file="/db/changelog/version_1_0/initial_locations.xml" relativeToChangelogFile="false"/>
+    <include file="/db/changelog/version_1_0/initial_sessions.xml" relativeToChangelogFile="false"/>
 
     <!--    <changeSet id="1" author="user">-->
     <!--        <createTable tableName="weather">-->

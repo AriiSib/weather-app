@@ -1,27 +1,41 @@
 package com.khokhlov.weather.controller;
 
+import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
 import com.khokhlov.weather.model.dto.UserDTO;
+import com.khokhlov.weather.service.SessionService;
 import com.khokhlov.weather.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class UserAuthController {
 
     private final UserService userService;
+    private final SessionService sessionService;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody UserCommand userCommand) {
-        return ResponseEntity.ok(userService.loginUser(userCommand));
+    public UserDTO loginUser(@RequestBody UserCommand userCommand, HttpServletResponse response) {
+        UserDTO userDTO = userService.loginUser(userCommand);
+        String sessionID = sessionService.createSession(userDTO.getUsername());
+
+        Cookie cookie = new Cookie("SESSION_ID", sessionID);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
+
+        return userDTO;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody UserCommand userCommand) {
+    public void registerUser(@RequestBody UserCommand userCommand) {
         userService.registerUser(userCommand);
-        return ResponseEntity.ok().build();
     }
 }

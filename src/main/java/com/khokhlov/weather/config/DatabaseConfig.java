@@ -67,12 +67,12 @@ public class DatabaseConfig {
         return transactionManager;
     }
 
-    @Bean
-    public SpringLiquibase liquibase(DataSource dataSource) {
-        SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog("classpath:db/changelog.xml");
-        return liquibase;
-    }
+//    @Bean
+//    public SpringLiquibase liquibase(DataSource dataSource) {
+//        SpringLiquibase liquibase = new SpringLiquibase();
+//        liquibase.setDataSource(dataSource);
+//        liquibase.setChangeLog("classpath:db/changelog.xml");
+//        return liquibase;
+//    }
 
 }

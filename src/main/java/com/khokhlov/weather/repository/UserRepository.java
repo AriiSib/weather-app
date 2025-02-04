@@ -1,6 +1,5 @@
 package com.khokhlov.weather.repository;
 
-import com.khokhlov.weather.model.command.UserCommand;
 import com.khokhlov.weather.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
@@ -14,10 +13,10 @@ public class UserRepository {
 
     private final SessionFactory sessionFactory;
 
-    public Optional<User> findByUsername(UserCommand command) {
+    public Optional<User> findByUsername(String username) {
         return sessionFactory.getCurrentSession()
-                .createQuery("FROM User WHERE username = :username", User.class)
-                .setParameter("username", command.getUsername())
+                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.username = :username", User.class)
+                .setParameter("username", username)
                 .uniqueResultOptional();
     }
 

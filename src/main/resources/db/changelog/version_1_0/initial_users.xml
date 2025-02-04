@@ -6,15 +6,15 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
-    <changeSet id="1738048082895-1" author="Artemii_Khokhlov">
+    <changeSet id="1" author="Artemii_Khokhlov">
         <createTable tableName="users">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(64)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="password" type="varchar(32)">
+            <column name="password" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="registered" type="timestamp">
