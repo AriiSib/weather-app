@@ -22,7 +22,7 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserDTO loginUser(UserCommand userCommand) {
+    public User loginUser(UserCommand userCommand) {
         User user = userRepository.findByUsername(userCommand.getUsername())
                 .orElseThrow(() -> new InvalidLoginException("User with username " + userCommand.getUsername() + " does not exist"));
 
@@ -30,7 +30,7 @@ public class UserService {
             throw new InvalidPasswordException("Invalid password");
         }
 
-        return userMapper.toUserDTO(user);
+        return user;
     }
 
     @Transactional

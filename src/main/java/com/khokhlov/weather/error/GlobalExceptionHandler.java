@@ -17,10 +17,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(InvalidPasswordException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public AppError handle(InvalidPasswordException e) {
+    public AppError handle(Exception e) {
         return new AppError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 

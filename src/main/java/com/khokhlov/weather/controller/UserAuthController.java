@@ -3,6 +3,7 @@ package com.khokhlov.weather.controller;
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
 import com.khokhlov.weather.model.dto.UserDTO;
+import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
 import com.khokhlov.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -22,8 +23,8 @@ public class UserAuthController {
 
     @PostMapping("/login")
     public UserDTO loginUser(@RequestBody UserCommand userCommand, HttpServletResponse response) {
-        UserDTO userDTO = userService.loginUser(userCommand);
-        String sessionID = sessionService.createSession(userDTO.getUsername());
+        User user = userService.loginUser(userCommand);
+        String sessionID = sessionService.createSession(user);
 
         Cookie cookie = new Cookie("SESSION_ID", sessionID);
         cookie.setHttpOnly(true);
@@ -31,7 +32,7 @@ public class UserAuthController {
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return userDTO;
+        return userMapper.toUserDTO(user);
     }
 
     @PostMapping("/register")

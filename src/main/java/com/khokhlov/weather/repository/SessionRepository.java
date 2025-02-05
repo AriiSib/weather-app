@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class SessionRepository {
@@ -13,5 +15,9 @@ public class SessionRepository {
 
     public void save(Session session) {
         sessionFactory.getCurrentSession().persist(session);
+    }
+
+    public Session findById(UUID sessionId) {
+        return  sessionFactory.getCurrentSession().get(Session.class, sessionId);
     }
 }

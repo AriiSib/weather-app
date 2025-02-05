@@ -2,6 +2,9 @@ package com.khokhlov.weather.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.khokhlov.weather.filter.SessionFilter;
+import com.khokhlov.weather.service.SessionService;
+import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRegistration;
 import lombok.AllArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -29,16 +33,22 @@ import java.util.List;
 @NoArgsConstructor
 public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
-    private  ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Override
     public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(ApplicationConfig.class);
         context.register(DatabaseConfig.class);
+        context.setServletContext(servletContext);
+        context.refresh();
 
         DispatcherServlet dispatcherServlet = new DispatcherServlet(context);
         ServletRegistration.Dynamic registration = servletContext.addServlet("dispatcher", dispatcherServlet);
+
+        FilterRegistration.Dynamic filter = servletContext.addFilter("sessionFilter",
+                new DelegatingFilterProxy("sessionFilter"));
+        filter.addMappingForUrlPatterns(null, false, "/*");
 
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
