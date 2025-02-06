@@ -33,7 +33,7 @@ import java.util.List;
 @NoArgsConstructor
 public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
-    private ApplicationContext applicationContext;
+    private  ApplicationContext applicationContext;
 
     @Override
     public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
@@ -47,7 +47,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         ServletRegistration.Dynamic registration = servletContext.addServlet("dispatcher", dispatcherServlet);
 
         FilterRegistration.Dynamic filter = servletContext.addFilter("sessionFilter",
-                new DelegatingFilterProxy("sessionFilter"));
+                new DelegatingFilterProxy());
         filter.addMappingForUrlPatterns(null, false, "/*");
 
         registration.setLoadOnStartup(1);
@@ -89,4 +89,9 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
+
+//    @Bean
+//    public SessionFilter sessionFilter(SessionService sessionService) {
+//        return new SessionFilter(sessionService);
+//    }
 }

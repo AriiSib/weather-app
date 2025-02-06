@@ -40,3 +40,5 @@ public class UserAuthController {
         userService.registerUser(userCommand);
     }
 }
+
+//todo: LocationController(MVC),logout, delete session from DB

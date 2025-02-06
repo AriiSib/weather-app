@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,7 +18,7 @@ public class SessionRepository {
         sessionFactory.getCurrentSession().persist(session);
     }
 
-    public Session findById(UUID sessionId) {
-        return  sessionFactory.getCurrentSession().get(Session.class, sessionId);
+    public Optional<Session> findById(UUID sessionId) {
+        return  Optional.of(sessionFactory.getCurrentSession().get(Session.class, sessionId));
     }
 }

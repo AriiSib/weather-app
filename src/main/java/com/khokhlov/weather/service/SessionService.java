@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,7 @@ public class SessionService {
     }
 
     @Transactional
-    public Session findSessionById(UUID sessionId) {
+    public Optional<Session> findSessionById(UUID sessionId) {
         return sessionRepository.findById(sessionId);
     }
 }
