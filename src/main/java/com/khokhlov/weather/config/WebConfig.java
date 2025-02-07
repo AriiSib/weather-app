@@ -2,8 +2,6 @@ package com.khokhlov.weather.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.khokhlov.weather.filter.SessionFilter;
-import com.khokhlov.weather.service.SessionService;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRegistration;
@@ -19,6 +17,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -33,7 +32,7 @@ import java.util.List;
 @NoArgsConstructor
 public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
-    private  ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Override
     public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
@@ -66,7 +65,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("/webapp/views/");
+        templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -90,8 +89,8 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         return viewResolver;
     }
 
-//    @Bean
-//    public SessionFilter sessionFilter(SessionService sessionService) {
-//        return new SessionFilter(sessionService);
-//    }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/css/**").addResourceLocations("/resources/css/");
+    }
 }

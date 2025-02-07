@@ -5,6 +5,7 @@ import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,38 +39,43 @@ public class SessionFilter extends OncePerRequestFilter {
             return;
         }
 
-        String uuid = request.getRequestedSessionId();
-        if (uuid == null) {
+        Cookie[] cookies = request.getCookies();
+        String sessionId = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("SESSION_ID".equals(cookie.getName())) {
+                    sessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (sessionId == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Session ID is null");
         }
 
 
-        UUID sessionId;
+        UUID uuid;
         try {
-            sessionId = UUID.fromString(uuid);
+            uuid = UUID.fromString(sessionId);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid Session ID");
             return;
         }
 
-        User user = null;
 
-        Optional<Session> sessionOpt = sessionService.findSessionById(sessionId);
-        if (sessionOpt.isPresent()) {
-            Session session = sessionOpt.get();
-            if (session.getExpiresAt().isAfter(LocalDateTime.now())) {
-                user = session.getUser();
-                request.setAttribute("user", user);
-            }
-        }
-
-        if (user == null) {
+        Optional<Session> session = sessionService.findSessionById(uuid);
+        if (session.isEmpty() || session.get().getExpiresAt().isBefore(LocalDateTime.now())) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Session is invalid or expired");
+            response.getWriter().write("Unauthorized: Session expired");
             return;
         }
+
+        User user = session.get().getUser();
+        request.setAttribute("user", user);
 
         filterChain.doFilter(request, response);
     }
