@@ -1,5 +1,6 @@
 package com.khokhlov.weather.controller;
 
+import com.khokhlov.weather.model.command.LocationCommand;
 import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.LocationService;
@@ -19,9 +20,9 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping("/add")
-    public String addLocation(@RequestBody String cityName, HttpServletRequest request) {
+    public String addLocation(@RequestBody LocationCommand locationCommand, HttpServletRequest request) {
         User user = (User) request.getAttribute("user");
-        locationService.addLocation(user, cityName);
+        locationService.addLocation(user, locationCommand);
         return "redirect:/";
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Value
 public class UserDTO {
-    long id;
+    Integer id;
     String username;
     List<Location> locations;
 }

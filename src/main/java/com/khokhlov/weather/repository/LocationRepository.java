@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -13,10 +14,20 @@ public class LocationRepository {
 
     private final SessionFactory sessionFactory;
 
-    public List<Location> findByUserId(Long userId) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM Location WHERE user.id = :userId", Location.class)
-                .setParameter("userId", userId)
-                .getResultList();
+//    public List<Location> findByUserId(Integer userId) {
+//        return sessionFactory.getCurrentSession()
+//                .createQuery("SELECT l FROM Location l JOIN l.users u WHERE u.id = :userId", Location.class)
+//                .setParameter("userId", userId)
+//                .getResultList();
+//    }
+
+    public Optional<Location> findByName(String locationName) {
+        return sessionFactory.getCurrentSession().createQuery("SELECT l FROM Location  l WHERE l.name = :locationName", Location.class)
+                .setParameter("locationName", locationName)
+                .uniqueResultOptional();
+    }
+
+    public void save(Location location) {
+        sessionFactory.getCurrentSession().persist(location);
     }
 }

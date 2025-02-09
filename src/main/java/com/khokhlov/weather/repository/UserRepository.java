@@ -15,8 +15,15 @@ public class UserRepository {
 
     public Optional<User> findByUsername(String username) {
         return sessionFactory.getCurrentSession()
-                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.username = :username", User.class)
+                .createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
                 .setParameter("username", username)
+                .uniqueResultOptional();
+    }
+
+    public Optional<User> findByIdWithLocations(Integer userId) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.id = :userId", User.class)
+                .setParameter("userId", userId)
                 .uniqueResultOptional();
     }
 

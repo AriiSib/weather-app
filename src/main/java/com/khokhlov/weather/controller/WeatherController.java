@@ -1,6 +1,7 @@
 package com.khokhlov.weather.controller;
 
 import com.khokhlov.weather.model.entity.User;
+import com.khokhlov.weather.service.LocationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class WeatherController {
 
-    private final LocationSerivce locationSerivce;
+    private final LocationService locationService;
 
     @GetMapping
     public String getWeatherPage(Model model, HttpServletRequest request) {
@@ -23,7 +24,7 @@ public class WeatherController {
         }
 
         model.addAttribute("sessionUser", user.getUsername());
-        model.addAttribute("locations", locationService.get);
+        model.addAttribute("locations", user.getLocations());
         return "index";
     }
 }

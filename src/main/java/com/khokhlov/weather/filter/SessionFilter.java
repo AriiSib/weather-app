@@ -54,6 +54,7 @@ public class SessionFilter extends OncePerRequestFilter {
         if (sessionId == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Session ID is null");
+            return;
         }
 
 
