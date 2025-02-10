@@ -30,7 +30,7 @@ public class LocationService {
 
     @Transactional
     public void addLocation(User user, LocationCommand locationCommand) {
-        user = userRepository.findByIdWithLocations(user.getId()).get();
+        user = userRepository.findByUsername(user.getUsername()).get();
 
         Optional<Location> existingLocation = locationRepository.findByName(locationCommand.getName());
 
