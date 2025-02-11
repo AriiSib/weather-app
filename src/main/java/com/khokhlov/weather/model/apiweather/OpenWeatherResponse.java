@@ -17,18 +17,21 @@ public class OpenWeatherResponse {
     private Main main;
     private Sys sys;
 
-    private static class Coord {
+    @Data
+    public static class Coord {
         private double lon;
         private double lat;
     }
 
-    private static class Weather {
+    @Data
+    public static class Weather {
         private String main;
         private String description;
         private String icon;
     }
 
-    private static class Main {
+    @Data
+    public static class Main {
         private double temp;
 
         @JsonProperty("feels_like")
@@ -36,7 +39,8 @@ public class OpenWeatherResponse {
         private int humidity;
     }
 
-    private static class Sys {
+    @Data
+    public static class Sys {
         private String country;
     }
 }

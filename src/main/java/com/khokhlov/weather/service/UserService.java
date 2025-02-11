@@ -4,13 +4,15 @@ import com.khokhlov.weather.exception.InvalidLoginException;
 import com.khokhlov.weather.exception.InvalidPasswordException;
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
-import com.khokhlov.weather.model.dto.UserDTO;
+import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,12 @@ public class UserService {
         User userToSave = userMapper.toUser(userCommand);
         userToSave.setPassword(passwordEncoder.encode(userCommand.getPassword()));
         userRepository.registerUser(userToSave);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Location> getUserLocations(Integer userId) {
+        return userRepository.findLocationsById(userId);
+
     }
 
 }
