@@ -48,7 +48,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
         FilterRegistration.Dynamic filter = servletContext.addFilter("sessionFilter",
                 new DelegatingFilterProxy());
-        filter.addMappingForUrlPatterns(null, false, "/*");
+        filter.addMappingForUrlPatterns(null, false, "/index");
 
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
@@ -76,7 +76,8 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/css/**").addResourceLocations("/resources/css/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/resources/");
     }
 
     @Bean

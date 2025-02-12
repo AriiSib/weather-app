@@ -41,7 +41,7 @@ public class WeatherController {
         }
 
 
-        model.addAttribute("locations", weatherList);
+        model.addAttribute("weatherList ", weatherList);
         return "index";
     }
 }
