@@ -25,10 +25,10 @@ public class Location {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private Double latitude;
 
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private Double longitude;
 
 //    @ManyToMany(mappedBy = "locations")

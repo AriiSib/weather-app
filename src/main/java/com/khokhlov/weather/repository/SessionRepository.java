@@ -19,6 +19,6 @@ public class SessionRepository {
     }
 
     public Optional<Session> findById(UUID sessionId) {
-        return  Optional.of(sessionFactory.getCurrentSession().get(Session.class, sessionId));
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(Session.class, sessionId));
     }
 }

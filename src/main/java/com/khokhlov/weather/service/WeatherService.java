@@ -17,7 +17,7 @@ public class WeatherService {
     private String API_KEY;
 
     public WeatherDTO getWeatherForCity(String city) {
-        String url = " https://api.openweathermap.org/data/2.5/weather"
+        String url = "https://api.openweathermap.org/data/2.5/weather"
                 + "?q=" + city
                 + "&appid=" + API_KEY
                 + "&units=metric";
@@ -31,7 +31,7 @@ public class WeatherService {
         return WeatherDTO.builder()
                 .cityName(response.getName())
                 .countryName(response.getSys().getCountry())
-                .temperature(response.getMain().getTemp())
+                .temperature((byte) Math.round(response.getMain().getTemp()))
                 .feelsLike(response.getMain().getFeelsLike())
                 .description(response.getWeather().getFirst().getDescription())
                 .humidity(response.getMain().getHumidity())
@@ -40,7 +40,7 @@ public class WeatherService {
     }
 
     public WeatherDTO getWeatherByCoordinate(Double lat, Double lon) {
-        String url = " https://api.openweathermap.org/data/2.5/weather"
+        String url = "https://api.openweathermap.org/data/2.5/weather"
                 + "&lat=" + lat
                 + "&lon=" + lon
                 + "&appid=" + API_KEY
@@ -55,7 +55,7 @@ public class WeatherService {
         return WeatherDTO.builder()
                 .cityName(response.getName())
                 .countryName(response.getSys().getCountry())
-                .temperature(response.getMain().getTemp())
+                .temperature((byte) Math.round(response.getMain().getTemp()))
                 .feelsLike(response.getMain().getFeelsLike())
                 .description(response.getWeather().getFirst().getDescription())
                 .humidity(response.getMain().getHumidity())

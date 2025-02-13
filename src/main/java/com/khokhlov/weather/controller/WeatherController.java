@@ -7,6 +7,7 @@ import com.khokhlov.weather.service.LocationService;
 import com.khokhlov.weather.service.UserService;
 import com.khokhlov.weather.service.WeatherService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public class WeatherController {
 
     @GetMapping
     public String getWeatherPage(Model model, HttpServletRequest request) {
-        User user = (User) request.getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return "redirect:/auth/login";
         }
@@ -36,12 +37,12 @@ public class WeatherController {
 
         List<WeatherDTO> weatherList = new ArrayList<>();
         for (Location location : locations) {
-            WeatherDTO weatherDTO = weatherService.getWeatherByCoordinate(location.getLatitude(), location.getLongitude());
+//            WeatherDTO weatherDTO = weatherService.getWeatherByCoordinate(location.getLatitude(), location.getLongitude());
+            WeatherDTO weatherDTO = weatherService.getWeatherForCity(location.getName());
             weatherList.add(weatherDTO);
         }
 
-
-        model.addAttribute("weatherList ", weatherList);
+        model.addAttribute("weatherList", weatherList);
         return "index";
     }
 }

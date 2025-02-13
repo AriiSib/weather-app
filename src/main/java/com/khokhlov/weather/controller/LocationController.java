@@ -7,21 +7,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/locations")
+@RequestMapping("/location")
 @RequiredArgsConstructor
 public class LocationController {
 
     private final LocationService locationService;
 
     @PostMapping("/add")
-    public String addLocation(@RequestBody LocationCommand locationCommand, HttpServletRequest request) {
-            User user = (User) request.getAttribute("user");
-        locationService.addLocation(user, locationCommand);
-        return "redirect:/";
+    public String addLocation(@RequestParam("name") String name,
+                              @RequestParam(value = "latitude", required = false) Double latitude,
+                              @RequestParam(value = "longitude", required = false) Double longitude,
+                              HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("user");
+        locationService.addLocation(user, new LocationCommand(name, latitude, longitude));
+        return "redirect:/index";
     }
 
 }

@@ -19,8 +19,8 @@ public class OpenWeatherResponse {
 
     @Data
     public static class Coord {
-        private double lon;
-        private double lat;
+        private Double lon;
+        private Double lat;
     }
 
     @Data
@@ -32,11 +32,11 @@ public class OpenWeatherResponse {
 
     @Data
     public static class Main {
-        private double temp;
+        private Double temp;
 
         @JsonProperty("feels_like")
-        private double feelsLike;
-        private int humidity;
+        private Double feelsLike;
+        private Integer humidity;
     }
 
     @Data

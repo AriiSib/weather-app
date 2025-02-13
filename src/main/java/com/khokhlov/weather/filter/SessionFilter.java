@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -52,8 +53,9 @@ public class SessionFilter extends OncePerRequestFilter {
         }
 
         if (sessionId == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Session ID is null");
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("Session ID is null");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -62,21 +64,25 @@ public class SessionFilter extends OncePerRequestFilter {
         try {
             uuid = UUID.fromString(sessionId);
         } catch (IllegalArgumentException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid Session ID");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            response.getWriter().write("Invalid Session ID");
             return;
         }
 
 
         Optional<Session> session = sessionService.findSessionById(uuid);
         if (session.isEmpty() || session.get().getExpiresAt().isBefore(LocalDateTime.now())) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Session expired");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            //            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("Unauthorized: Session expired");
             return;
         }
 
         User user = session.get().getUser();
-        request.setAttribute("user", user);
+
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute("user", user);
 
         filterChain.doFilter(request, response);
     }

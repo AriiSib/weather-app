@@ -2,7 +2,6 @@ package com.khokhlov.weather.controller;
 
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
-import com.khokhlov.weather.model.dto.UserDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
 import com.khokhlov.weather.service.UserService;
@@ -20,7 +19,6 @@ public class UserAuthController {
 
     private final UserService userService;
     private final SessionService sessionService;
-    private final UserMapper userMapper;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -28,8 +26,8 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username,
-                            @RequestParam String password,
+    public String loginUser(@RequestParam("username") String username,
+                            @RequestParam("password") String password,
                             HttpServletResponse response) {
         User user = userService.loginUser(new UserCommand(username, password));
         String sessionID = sessionService.createSession(user);
@@ -48,10 +46,9 @@ public class UserAuthController {
         return "sign-up";
     }
 
-
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username,
-                               @RequestParam String password) {
+    public String registerUser(@RequestParam("username") String username,
+                               @RequestParam("password") String password) {
         userService.registerUser(new UserCommand(username, password));
         return "redirect:/auth/login";
     }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class WeatherDTO {
     private String cityName;
     private String countryName;
-    private Double temperature;
+    private Byte temperature;
     private Double feelsLike;
     private String description;
     private Integer humidity;
