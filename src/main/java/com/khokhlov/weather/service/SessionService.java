@@ -33,4 +33,9 @@ public class SessionService {
     public Optional<Session> findSessionById(UUID sessionId) {
         return sessionRepository.findById(sessionId);
     }
+
+    @Transactional
+    public void deleteSession(String sessionID) {
+        sessionRepository.deleteSession(UUID.fromString(sessionID));
+    }
 }

@@ -21,4 +21,8 @@ public class SessionRepository {
     public Optional<Session> findById(UUID sessionId) {
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(Session.class, sessionId));
     }
+
+    public void deleteSession(UUID sessionID) {
+        sessionFactory.getCurrentSession().remove(findById(sessionID).orElseThrow());
+    }
 }
