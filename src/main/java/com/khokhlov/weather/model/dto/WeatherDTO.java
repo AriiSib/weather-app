@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeatherDTO {
+    private Integer id;
     private String cityName;
     private String countryName;
     private Byte temperature;

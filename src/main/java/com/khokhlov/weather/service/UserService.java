@@ -2,9 +2,10 @@ package com.khokhlov.weather.service;
 
 import com.khokhlov.weather.exception.InvalidLoginException;
 import com.khokhlov.weather.exception.InvalidPasswordException;
+import com.khokhlov.weather.mapper.LocationMapper;
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
-import com.khokhlov.weather.model.entity.Location;
+import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final LocationMapper locationMapper;
 
 
     @Transactional(readOnly = true)
@@ -43,9 +45,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<Location> getUserLocations(Integer userId) {
-        return userRepository.findLocationsById(userId);
-
+    public List<LocationDTO> getUserLocations(Integer userId) {
+        return userRepository.findLocationsById(userId).stream()
+                .map(locationMapper::toLocationDTO)
+                .toList();
     }
 
 }

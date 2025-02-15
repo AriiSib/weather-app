@@ -1,13 +1,11 @@
 package com.khokhlov.weather.controller;
 
+import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.dto.WeatherDTO;
-import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
-import com.khokhlov.weather.service.LocationService;
 import com.khokhlov.weather.service.UserService;
 import com.khokhlov.weather.service.WeatherService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +31,13 @@ public class WeatherController {
         }
         model.addAttribute("sessionUser", user.getUsername());
 
-        List<Location> locations = userService.getUserLocations(user.getId());
+        List<LocationDTO> locations = userService.getUserLocations(user.getId());
 
         List<WeatherDTO> weatherList = new ArrayList<>();
-        for (Location location : locations) {
+        for (LocationDTO location : locations) {
 //            WeatherDTO weatherDTO = weatherService.getWeatherByCoordinate(location.getLatitude(), location.getLongitude());
             WeatherDTO weatherDTO = weatherService.getWeatherForCity(location.getName());
+            weatherDTO.setId(location.getId());
             weatherList.add(weatherDTO);
         }
 

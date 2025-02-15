@@ -30,4 +30,8 @@ public class LocationRepository {
     public void save(Location location) {
         sessionFactory.getCurrentSession().persist(location);
     }
+
+    public Location findById(Integer locationId) {
+        return sessionFactory.getCurrentSession().get(Location.class, locationId);
+    }
 }

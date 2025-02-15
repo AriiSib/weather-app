@@ -25,6 +25,16 @@ public class LocationController {
 
         User user = (User) request.getSession().getAttribute("user");
         locationService.addLocation(user, new LocationCommand(name, latitude, longitude));
+
+        return "redirect:/index";
+    }
+
+    @PostMapping("/delete")
+    public String deleteLocation(@RequestParam("id") Integer id,
+                                 HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        locationService.deleteLocation(user, id);
+
         return "redirect:/index";
     }
 

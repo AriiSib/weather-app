@@ -1,17 +1,18 @@
 package com.khokhlov.weather.service;
 
+import com.khokhlov.weather.consts.Consts;
+import com.khokhlov.weather.model.apiweather.OpenWeatherResponse;
 import com.khokhlov.weather.model.command.LocationCommand;
-import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.LocationRepository;
 import com.khokhlov.weather.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,28 +21,35 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
-//    @Transactional(readOnly = true)
-//    public List<LocationDTO> getUserLocations(Integer userId) {
-//        return locationRepository.findByUserId(userId).stream()
-//                .map(LocationDTO::new)
-//                .toList();
-//    }
+    @Value("${weather.api.key}")
+    private String API_KEY;
 
     @Transactional
     public void addLocation(User user, LocationCommand locationCommand) {
-        user = userRepository.findByUsername(user.getUsername()).get();
+        user = userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new RuntimeException("username not found"));
 
-        Optional<Location> existingLocation = locationRepository.findByName(locationCommand.getName());
+        String editedLocationName = locationCommand.getName().toLowerCase().trim();
+
+        Optional<Location> existingLocation = locationRepository.findByName(editedLocationName);
 
         Location location;
         if (existingLocation.isPresent()) {
             location = existingLocation.get();
         } else {
+            String url = String.format(Consts.GET_LOCATION_URL, editedLocationName, API_KEY);
+            OpenWeatherResponse response = restTemplate.getForObject(url, OpenWeatherResponse.class);
+
+            if (response == null) {
+                throw new RuntimeException("OpenWeatherResponse is null");
+            }
+
             location = Location.builder()
-                    .name(locationCommand.getName())
-                    .latitude(locationCommand.getLatitude())
-                    .longitude(locationCommand.getLongitude())
+                    .name(response.getName())
+                    .latitude(response.getCoord().getLat())
+                    .longitude(response.getCoord().getLon())
                     .build();
             locationRepository.save(location);
 
@@ -49,5 +57,15 @@ public class LocationService {
                 user.getLocations().add(location);
             }
         }
+    }
+
+    @Transactional
+    public void deleteLocation(User user, Integer locationId) {
+        user = userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new RuntimeException("username not found"));
+
+        Location locationToDelete = locationRepository.findById(locationId);
+
+        user.getLocations().remove(locationToDelete);
     }
 }
