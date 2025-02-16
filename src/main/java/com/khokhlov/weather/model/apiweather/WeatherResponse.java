@@ -10,8 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenWeatherResponse {
-    private String name;
+public class WeatherResponse {
+    @JsonProperty("name")
+    private String locationName;
     private Coord coord;
     private List<Weather> weather;
     private Main main;

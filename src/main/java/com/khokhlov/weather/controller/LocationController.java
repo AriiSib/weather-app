@@ -1,14 +1,18 @@
 package com.khokhlov.weather.controller;
 
 import com.khokhlov.weather.model.command.LocationCommand;
+import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.LocationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/location")
@@ -27,6 +31,20 @@ public class LocationController {
         locationService.addLocation(user, new LocationCommand(name, latitude, longitude));
 
         return "redirect:/index";
+    }
+
+    @PostMapping("/search")
+    public String searchLocation(@RequestParam("name") String name,
+                                 Model model,
+                                 HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        List<LocationDTO> locations = locationService.findLocation(name);
+
+
+
+        model.addAttribute("locationList", locations);
+
+        return "search-results";
     }
 
     @PostMapping("/delete")

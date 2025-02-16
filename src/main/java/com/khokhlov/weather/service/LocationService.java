@@ -1,8 +1,10 @@
 package com.khokhlov.weather.service;
 
 import com.khokhlov.weather.consts.Consts;
-import com.khokhlov.weather.model.apiweather.OpenWeatherResponse;
+import com.khokhlov.weather.model.apiweather.LocationResponse;
+import com.khokhlov.weather.model.apiweather.WeatherResponse;
 import com.khokhlov.weather.model.command.LocationCommand;
+import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.LocationRepository;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,19 +39,16 @@ public class LocationService {
 
         Optional<Location> existingLocation = locationRepository.findByName(editedLocationName);
 
-        Location location;
-        if (existingLocation.isPresent()) {
-            location = existingLocation.get();
-        } else {
-            String url = String.format(Consts.GET_LOCATION_URL, editedLocationName, API_KEY);
-            OpenWeatherResponse response = restTemplate.getForObject(url, OpenWeatherResponse.class);
+        if (existingLocation.isEmpty()) {
+            String url = String.format(Consts.WEATHER_FOR_LOCATION_URL, editedLocationName, API_KEY);
+            WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 
             if (response == null) {
-                throw new RuntimeException("OpenWeatherResponse is null");
+                throw new RuntimeException("WeatherResponse is null");
             }
 
-            location = Location.builder()
-                    .name(response.getName())
+            Location location = Location.builder()
+                    .name(response.getLocationName().toLowerCase())
                     .latitude(response.getCoord().getLat())
                     .longitude(response.getCoord().getLon())
                     .build();
@@ -65,7 +66,34 @@ public class LocationService {
                 .orElseThrow(() -> new RuntimeException("username not found"));
 
         Location locationToDelete = locationRepository.findById(locationId);
+        locationRepository.deleteLocation(locationToDelete);
 
         user.getLocations().remove(locationToDelete);
+    }
+
+    public List<LocationDTO> findLocation(String locationName) {
+        String editedLocationName = locationName.toLowerCase().trim();
+        String url = String.format(Consts.LOCATION_SEARCH_URL, editedLocationName, API_KEY);
+
+        LocationResponse[] response = restTemplate.getForObject(url, LocationResponse[].class);
+
+        if (response == null) {
+            throw new RuntimeException("LocationResponse is null for  " + editedLocationName);
+        }
+
+        List<LocationDTO> locationList = new ArrayList<>();
+        for (LocationResponse locationResponse : response) {
+            LocationDTO location = LocationDTO.builder()
+                    .locationName(locationResponse.getLocationName())
+                    .state(locationResponse.getState())
+                    .country(locationResponse.getCountry())
+                    .latitude(locationResponse.getLat())
+                    .longitude(locationResponse.getLon())
+                    .build();
+
+            locationList.add(location);
+        }
+
+        return locationList;
     }
 }

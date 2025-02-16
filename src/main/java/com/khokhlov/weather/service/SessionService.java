@@ -22,7 +22,7 @@ public class SessionService {
         Session session = Session.builder()
                 .id(UUID.randomUUID())
                 .user(user)
-                .expiresAt(LocalDateTime.now().plusHours(1))
+                .expiresAt(LocalDateTime.now().plusHours(12))
                 .build();
 
         sessionRepository.save(session);

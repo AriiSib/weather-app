@@ -21,6 +21,10 @@ public class LocationRepository {
 //                .getResultList();
 //    }
 
+    public Location findById(Integer locationId) {
+        return sessionFactory.getCurrentSession().get(Location.class, locationId);
+    }
+
     public Optional<Location> findByName(String locationName) {
         return sessionFactory.getCurrentSession().createQuery("SELECT l FROM Location  l WHERE l.name = :locationName", Location.class)
                 .setParameter("locationName", locationName)
@@ -31,7 +35,7 @@ public class LocationRepository {
         sessionFactory.getCurrentSession().persist(location);
     }
 
-    public Location findById(Integer locationId) {
-        return sessionFactory.getCurrentSession().get(Location.class, locationId);
+    public void deleteLocation(Location locationToDelete) {
+        sessionFactory.getCurrentSession().remove(locationToDelete);
     }
 }

@@ -36,7 +36,7 @@ public class WeatherController {
         List<WeatherDTO> weatherList = new ArrayList<>();
         for (LocationDTO location : locations) {
 //            WeatherDTO weatherDTO = weatherService.getWeatherByCoordinate(location.getLatitude(), location.getLongitude());
-            WeatherDTO weatherDTO = weatherService.getWeatherForCity(location.getName());
+            WeatherDTO weatherDTO = weatherService.getWeatherForCity(location.getLocationName());
             weatherDTO.setId(location.getId());
             weatherList.add(weatherDTO);
         }

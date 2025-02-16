@@ -1,6 +1,6 @@
 package com.khokhlov.weather.service;
 
-import com.khokhlov.weather.model.apiweather.OpenWeatherResponse;
+import com.khokhlov.weather.model.apiweather.WeatherResponse;
 import com.khokhlov.weather.model.dto.WeatherDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +22,17 @@ public class WeatherService {
                 + "&appid=" + API_KEY
                 + "&units=metric";
 
-        OpenWeatherResponse response = restTemplate.getForObject(url, OpenWeatherResponse.class);
+        WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 
         if (response == null) {
-            throw new RuntimeException("OpenWeatherResponse is null");
+            throw new RuntimeException("WeatherResponse is null");
         }
 
         return WeatherDTO.builder()
-                .cityName(response.getName())
+                .cityName(response.getLocationName())
                 .countryName(response.getSys().getCountry())
                 .temperature((byte) Math.round(response.getMain().getTemp()))
-                .feelsLike(response.getMain().getFeelsLike())
+                .feelsLike((byte) Math.round(response.getMain().getFeelsLike()))
                 .description(response.getWeather().getFirst().getDescription())
                 .humidity(response.getMain().getHumidity())
                 .icon(response.getWeather().getFirst().getIcon())
@@ -46,17 +46,17 @@ public class WeatherService {
                 + "&appid=" + API_KEY
                 + "&units=metric";
 
-        OpenWeatherResponse response = restTemplate.getForObject(url, OpenWeatherResponse.class);
+        WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 
         if (response == null) {
-            throw new RuntimeException("OpenWeatherResponse is null");
+            throw new RuntimeException("WeatherResponse is null");
         }
 
         return WeatherDTO.builder()
-                .cityName(response.getName())
+                .cityName(response.getLocationName())
                 .countryName(response.getSys().getCountry())
                 .temperature((byte) Math.round(response.getMain().getTemp()))
-                .feelsLike(response.getMain().getFeelsLike())
+                .feelsLike((byte) Math.round(response.getMain().getFeelsLike()))
                 .description(response.getWeather().getFirst().getDescription())
                 .humidity(response.getMain().getHumidity())
                 .icon(response.getWeather().getFirst().getIcon())

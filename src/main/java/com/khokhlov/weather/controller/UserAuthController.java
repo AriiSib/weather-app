@@ -27,10 +27,14 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam("username") String username,
+    public String loginUser(@CookieValue(value = "SESSION_ID", required = false) String sessionId,
+                            @RequestParam("username") String username,
                             @RequestParam("password") String password,
                             HttpServletResponse response) {
         User user = userService.loginUser(new UserCommand(username, password));
+        if(sessionId != null) {
+            sessionService.deleteSession(sessionId);
+        }
         createSessionAndCookie(response, user);
 
         return "redirect:/index";

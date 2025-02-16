@@ -14,7 +14,7 @@ public class WeatherDTO {
     private String cityName;
     private String countryName;
     private Byte temperature;
-    private Double feelsLike;
+    private Byte feelsLike;
     private String description;
     private Integer humidity;
     private String icon;
