@@ -1,5 +1,6 @@
 package com.khokhlov.weather.service;
 
+import com.khokhlov.weather.consts.Consts;
 import com.khokhlov.weather.model.apiweather.WeatherResponse;
 import com.khokhlov.weather.model.dto.WeatherDTO;
 import lombok.RequiredArgsConstructor;
@@ -17,35 +18,18 @@ public class WeatherService {
     private String API_KEY;
 
     public WeatherDTO getWeatherForCity(String city) {
-        String url = "https://api.openweathermap.org/data/2.5/weather"
-                + "?q=" + city
-                + "&appid=" + API_KEY
-                + "&units=metric";
+        String url = String.format(Consts.WEATHER_FOR_LOCATION_URL, city, API_KEY);
 
-        WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
-
-        if (response == null) {
-            throw new RuntimeException("WeatherResponse is null");
-        }
-
-        return WeatherDTO.builder()
-                .cityName(response.getLocationName())
-                .countryName(response.getSys().getCountry())
-                .temperature((byte) Math.round(response.getMain().getTemp()))
-                .feelsLike((byte) Math.round(response.getMain().getFeelsLike()))
-                .description(response.getWeather().getFirst().getDescription())
-                .humidity(response.getMain().getHumidity())
-                .icon(response.getWeather().getFirst().getIcon())
-                .build();
+        return getWeatherByUrl(url);
     }
 
-    public WeatherDTO getWeatherByCoordinate(Double lat, Double lon) {
-        String url = "https://api.openweathermap.org/data/2.5/weather"
-                + "&lat=" + lat
-                + "&lon=" + lon
-                + "&appid=" + API_KEY
-                + "&units=metric";
+    public WeatherDTO getWeatherByCoordinates(Double lat, Double lon) {
+        String url = String.format(Consts.WEATHER_BY_COORDINATES_URL, lat, lon, API_KEY);
 
+        return getWeatherByUrl(url);
+    }
+
+    private WeatherDTO getWeatherByUrl(String url) {
         WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 
         if (response == null) {

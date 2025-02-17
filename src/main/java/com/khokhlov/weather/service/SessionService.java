@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,10 @@ public class SessionService {
 
     @Transactional
     public void deleteSession(String sessionID) {
-        sessionRepository.deleteSession(UUID.fromString(sessionID));
+        try {
+            sessionRepository.deleteSession(UUID.fromString(sessionID));
+        } catch (NoSuchElementException e) {
+            return;
+        }
     }
 }

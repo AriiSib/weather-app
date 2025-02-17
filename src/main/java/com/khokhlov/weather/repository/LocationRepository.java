@@ -31,6 +31,14 @@ public class LocationRepository {
                 .uniqueResultOptional();
     }
 
+    public Optional<Location> findByNameAndCoordinates(String locationName, double latitude, double longitude) {
+        return sessionFactory.getCurrentSession().createQuery("SELECT l FROM Location l WHERE l.name = :locationName AND l.latitude = :latitude AND l.longitude = :longitude", Location.class)
+                .setParameter("locationName", locationName)
+                .setParameter("latitude", latitude)
+                .setParameter("longitude", longitude)
+                .uniqueResultOptional();
+    }
+
     public void save(Location location) {
         sessionFactory.getCurrentSession().persist(location);
     }
