@@ -34,7 +34,7 @@ public class LocationService {
         user = userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> new RuntimeException("username not found"));
 
-        String editedLocationName = locationCommand.getName().toLowerCase().trim();
+        String editedLocationName = locationCommand.getName().trim();
 
         Optional<Location> existingLocation = locationRepository.findByNameAndCoordinates(editedLocationName, locationCommand.getLatitude(), locationCommand.getLongitude());
 
@@ -47,7 +47,7 @@ public class LocationService {
 //            }
 
             Location location = Location.builder()
-                    .name(locationCommand.getName().toLowerCase())
+                    .name(locationCommand.getName())
                     .latitude(locationCommand.getLatitude())
                     .longitude(locationCommand.getLongitude())
                     .build();

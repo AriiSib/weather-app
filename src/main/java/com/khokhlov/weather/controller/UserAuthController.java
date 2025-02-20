@@ -1,5 +1,6 @@
 package com.khokhlov.weather.controller;
 
+import com.khokhlov.weather.exception.InvalidLoginException;
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
 import com.khokhlov.weather.model.entity.Session;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,7 +34,7 @@ public class UserAuthController {
                             @RequestParam("password") String password,
                             HttpServletResponse response) {
         User user = userService.loginUser(new UserCommand(username, password));
-        if(sessionId != null) {
+        if (sessionId != null) {
             sessionService.deleteSession(sessionId);
         }
         createSessionAndCookie(response, user);
@@ -58,9 +60,21 @@ public class UserAuthController {
 
     @PostMapping("/register")
     public String registerUser(@RequestParam("username") String username,
-                               @RequestParam("password") String password) {
-        userService.registerUser(new UserCommand(username, password));
-        return "redirect:/auth/login";
+                               @RequestParam("password") String password,
+                               @RequestParam("repeat-password")  String repeatPassword,
+                               Model model) {
+        try {
+            userService.registerUser(new UserCommand(username, password));
+
+            return "redirect:/auth/login";
+        } catch (InvalidLoginException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("username", username);
+            model.addAttribute("password", password);
+            model.addAttribute("repeatPassword", repeatPassword);
+
+            return "sign-up";
+        }
     }
 
     private void createSessionAndCookie(HttpServletResponse response, User user) {

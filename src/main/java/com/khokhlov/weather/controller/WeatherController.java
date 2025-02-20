@@ -38,10 +38,20 @@ public class WeatherController {
             WeatherDTO weatherDTO = weatherService.getWeatherByCoordinates(location.getLatitude(), location.getLongitude());
 //            WeatherDTO weatherDTO = weatherService.getWeatherForCity(location.getName());
             weatherDTO.setId(location.getId());
+            weatherDTO.setCityName(location.getName());
+            weatherDTO.setDescription(toUpperCaseForFirstLetter(weatherDTO.getDescription()));
             weatherList.add(weatherDTO);
         }
 
         model.addAttribute("weatherList", weatherList);
         return "index";
+    }
+
+    private static String toUpperCaseForFirstLetter(String text) {
+        StringBuilder builder = new StringBuilder(text);
+        if (Character.isAlphabetic(text.codePointAt(0)))
+            builder.setCharAt(0, Character.toUpperCase(text.charAt(0)));
+
+        return builder.toString();
     }
 }
