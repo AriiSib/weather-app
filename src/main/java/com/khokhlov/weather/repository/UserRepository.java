@@ -1,10 +1,9 @@
 package com.khokhlov.weather.repository;
 
-import com.khokhlov.weather.exception.InvalidLoginException;
+import com.khokhlov.weather.exception.InvalidLoginOrPasswordException;
 import com.khokhlov.weather.model.entity.Location;
 import com.khokhlov.weather.model.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,7 @@ public class UserRepository {
         try {
             sessionFactory.getCurrentSession().persist(user);
         } catch (ConstraintViolationException e) {
-            throw new InvalidLoginException("Account with this username already exists.");
+            throw new InvalidLoginOrPasswordException("Account with this username already exists.", "usernameError");
         }
     }
 

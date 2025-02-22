@@ -1,9 +1,8 @@
 package com.khokhlov.weather.controller;
 
-import com.khokhlov.weather.exception.InvalidLoginException;
-import com.khokhlov.weather.mapper.UserMapper;
+import com.khokhlov.weather.exception.InvalidLoginOrPasswordException;
 import com.khokhlov.weather.model.command.UserCommand;
-import com.khokhlov.weather.model.entity.Session;
+import com.khokhlov.weather.model.command.UserRegisterCommand;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
 import com.khokhlov.weather.service.UserService;
@@ -32,8 +31,18 @@ public class UserAuthController {
     public String loginUser(@CookieValue(value = "SESSION_ID", required = false) String sessionId,
                             @RequestParam("username") String username,
                             @RequestParam("password") String password,
-                            HttpServletResponse response) {
-        User user = userService.loginUser(new UserCommand(username, password));
+                            HttpServletResponse response,
+                            Model model) {
+        User user = null;
+        try {
+            user = userService.loginUser(new UserCommand(username, password));
+        } catch (InvalidLoginOrPasswordException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute(e.getERROR_IDENTIFIER(), e.getMessage());
+            model.addAttribute("username", username);
+
+            return "sign-in";
+        }
         if (sessionId != null) {
             sessionService.deleteSession(sessionId);
         }
@@ -61,20 +70,21 @@ public class UserAuthController {
     @PostMapping("/register")
     public String registerUser(@RequestParam("username") String username,
                                @RequestParam("password") String password,
-                               @RequestParam("repeat-password")  String repeatPassword,
+                               @RequestParam("repeat-password") String repeatPassword,
                                Model model) {
         try {
-            userService.registerUser(new UserCommand(username, password));
-
-            return "redirect:/auth/login";
-        } catch (InvalidLoginException e) {
+            userService.registerUser(new UserRegisterCommand(username, password, repeatPassword));
+        } catch (InvalidLoginOrPasswordException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute(e.getERROR_IDENTIFIER(), e.getMessage());
             model.addAttribute("username", username);
             model.addAttribute("password", password);
             model.addAttribute("repeatPassword", repeatPassword);
 
             return "sign-up";
         }
+
+        return "redirect:/auth/login";
     }
 
     private void createSessionAndCookie(HttpServletResponse response, User user) {

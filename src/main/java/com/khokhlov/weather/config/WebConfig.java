@@ -3,7 +3,7 @@ package com.khokhlov.weather.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -36,7 +36,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
     private ApplicationContext applicationContext;
 
     @Override
-    public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
+    public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(ApplicationConfig.class);
         context.register(DatabaseConfig.class);

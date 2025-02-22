@@ -1,13 +1,14 @@
 package com.khokhlov.weather.service;
 
-import com.khokhlov.weather.exception.InvalidLoginException;
-import com.khokhlov.weather.exception.InvalidPasswordException;
+import com.khokhlov.weather.exception.InvalidLoginOrPasswordException;
 import com.khokhlov.weather.mapper.LocationMapper;
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
+import com.khokhlov.weather.model.command.UserRegisterCommand;
 import com.khokhlov.weather.model.dto.LocationDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.UserRepository;
+import com.khokhlov.weather.validation.UserRegisterValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,19 +29,21 @@ public class UserService {
     @Transactional(readOnly = true)
     public User loginUser(UserCommand userCommand) {
         User user = userRepository.findByUsername(userCommand.getUsername())
-                .orElseThrow(() -> new InvalidLoginException("User with username " + userCommand.getUsername() + " does not exist"));
+                .orElseThrow(() -> new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError"));
 
         if (!passwordEncoder.matches(userCommand.getPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Invalid password");
+            throw new InvalidLoginOrPasswordException("Wrong password", "passwordError");
         }
 
         return user;
     }
 
     @Transactional
-    public void registerUser(UserCommand userCommand) {
-        User userToSave = userMapper.toUser(userCommand);
-        userToSave.setPassword(passwordEncoder.encode(userCommand.getPassword()));
+    public void registerUser(UserRegisterCommand userRegisterCommand) {
+        UserRegisterValidation.validate(userRegisterCommand);
+
+        User userToSave = userMapper.toUser(userRegisterCommand);
+        userToSave.setPassword(passwordEncoder.encode(userRegisterCommand.getPassword()));
         userRepository.registerUser(userToSave);
     }
 

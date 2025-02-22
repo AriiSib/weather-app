@@ -2,6 +2,7 @@ package com.khokhlov.weather.controller.rest;
 
 import com.khokhlov.weather.mapper.UserMapper;
 import com.khokhlov.weather.model.command.UserCommand;
+import com.khokhlov.weather.model.command.UserRegisterCommand;
 import com.khokhlov.weather.model.dto.UserDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
@@ -9,6 +10,7 @@ import com.khokhlov.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,7 +40,7 @@ public class UserRestAuthController {
     }
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody UserCommand userCommand) {
-        userService.registerUser(userCommand);
+    public void registerUser(@RequestBody UserRegisterCommand userRegisterCommand, Model model) {
+        userService.registerUser(userRegisterCommand);
     }
 }

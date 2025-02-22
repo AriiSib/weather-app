@@ -1,6 +1,6 @@
 package com.khokhlov.weather.mapper;
 
-import com.khokhlov.weather.model.command.UserCommand;
+import com.khokhlov.weather.model.command.UserRegisterCommand;
 import com.khokhlov.weather.model.dto.UserDTO;
 import com.khokhlov.weather.model.entity.User;
 import org.mapstruct.Mapper;
@@ -11,6 +11,6 @@ public interface UserMapper {
 
     UserDTO toUserDTO(User user);
 
-    User toUser(UserCommand userCommand);
+    User toUser(UserRegisterCommand userRegisterCommand);
 
 }

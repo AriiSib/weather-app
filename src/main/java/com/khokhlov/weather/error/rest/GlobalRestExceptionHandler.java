@@ -1,6 +1,6 @@
 package com.khokhlov.weather.error.rest;
 
-import com.khokhlov.weather.exception.InvalidLoginException;
+import com.khokhlov.weather.exception.InvalidLoginOrPasswordException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 @ControllerAdvice(annotations = RestController.class)
 public class GlobalRestExceptionHandler {
 
-    @ExceptionHandler(InvalidLoginException.class)
-    public ResponseEntity<AppError> handle(InvalidLoginException e) {
+    @ExceptionHandler(InvalidLoginOrPasswordException.class)
+    public ResponseEntity<AppError> handle(InvalidLoginOrPasswordException e) {
         return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 

@@ -21,7 +21,6 @@ public class SessionService {
     @Transactional
     public String createSession(User user) {
         Session session = Session.builder()
-                .id(UUID.randomUUID())
                 .user(user)
                 .expiresAt(LocalDateTime.now().plusHours(12))
                 .build();
