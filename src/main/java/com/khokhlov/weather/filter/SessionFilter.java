@@ -53,8 +53,6 @@ public class SessionFilter extends OncePerRequestFilter {
         }
 
         if (sessionId == null) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.getWriter().write("Session ID is null");
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
@@ -65,8 +63,6 @@ public class SessionFilter extends OncePerRequestFilter {
             uuid = UUID.fromString(sessionId);
         } catch (IllegalArgumentException e) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            response.getWriter().write("Invalid Session ID");
             return;
         }
 
@@ -74,8 +70,6 @@ public class SessionFilter extends OncePerRequestFilter {
         Optional<Session> session = sessionService.findSessionById(uuid);
         if (session.isEmpty() || session.get().getExpiresAt().isBefore(LocalDateTime.now())) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
-            //            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.getWriter().write("Unauthorized: Session expired");
             return;
         }
 

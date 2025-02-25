@@ -17,24 +17,16 @@ public class WeatherService {
     @Value("${weather.api.key}")
     private String API_KEY;
 
-    public WeatherDTO getWeatherForCity(String city) {
-        String url = String.format(Consts.WEATHER_FOR_LOCATION_URL, city, API_KEY);
-
-        return getWeatherByUrl(url);
-    }
-
     public WeatherDTO getWeatherByCoordinates(Double lat, Double lon) {
         String url = String.format(Consts.WEATHER_BY_COORDINATES_URL, lat, lon, API_KEY);
-
         return getWeatherByUrl(url);
     }
 
     private WeatherDTO getWeatherByUrl(String url) {
         WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 
-        if (response == null) {
+        if (response == null)
             throw new RuntimeException("WeatherResponse is null");
-        }
 
         return WeatherDTO.builder()
                 .cityName(response.getLocationName())

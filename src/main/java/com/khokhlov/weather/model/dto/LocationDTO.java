@@ -16,11 +16,4 @@ public class LocationDTO {
     String state;
     Double latitude;
     Double longitude;
-
-//    public LocationDTO(Location location) {
-//        this.id = location.getId();
-//        this.locationName = location.getName();
-//        this.latitude = location.getLatitude();
-//        this.longitude = location.getLongitude();
-//    }
 }

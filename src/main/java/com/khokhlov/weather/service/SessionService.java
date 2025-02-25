@@ -38,8 +38,8 @@ public class SessionService {
     public void deleteSession(String sessionID) {
         try {
             sessionRepository.deleteSession(UUID.fromString(sessionID));
-        } catch (NoSuchElementException e) {
-            return;
+        } catch (NoSuchElementException ignored) {
+
         }
     }
 }

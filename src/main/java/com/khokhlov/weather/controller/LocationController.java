@@ -2,10 +2,8 @@ package com.khokhlov.weather.controller;
 
 import com.khokhlov.weather.model.command.LocationCommand;
 import com.khokhlov.weather.model.dto.LocationDTO;
-import com.khokhlov.weather.model.dto.WeatherDTO;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.LocationService;
-import com.khokhlov.weather.service.WeatherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,7 +20,6 @@ import java.util.List;
 public class LocationController {
 
     private final LocationService locationService;
-    private final WeatherService weatherService;
 
     @PostMapping("/add")
     public String addLocation(@RequestParam("name") String name,

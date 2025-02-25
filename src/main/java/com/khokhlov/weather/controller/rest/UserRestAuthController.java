@@ -40,7 +40,7 @@ public class UserRestAuthController {
     }
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody UserRegisterCommand userRegisterCommand, Model model) {
+    public void registerUser(@RequestBody UserRegisterCommand userRegisterCommand) {
         userService.registerUser(userRegisterCommand);
     }
 }

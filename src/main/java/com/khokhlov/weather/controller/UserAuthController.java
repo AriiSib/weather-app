@@ -104,5 +104,3 @@ public class UserAuthController {
         response.addCookie(cookie);
     }
 }
-
-//todo: LocationController(MVC),logout, delete session from DB

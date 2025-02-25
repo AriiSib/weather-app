@@ -34,18 +34,11 @@ public class LocationService {
         user = userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> new RuntimeException("username not found"));
 
-        String editedLocationName = locationCommand.getName().trim();
+        String locationName = locationCommand.getName().trim();
 
-        Optional<Location> existingLocation = locationRepository.findByNameAndCoordinates(editedLocationName, locationCommand.getLatitude(), locationCommand.getLongitude());
+        Optional<Location> existingLocation = locationRepository.findByNameAndCoordinates(locationName, locationCommand.getLatitude(), locationCommand.getLongitude());
 
         if (existingLocation.isEmpty()) {
-//            String url = String.format(Consts.WEATHER_FOR_LOCATION_URL, editedLocationName, API_KEY);
-//            WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
-//
-//            if (response == null) {
-//                throw new RuntimeException("WeatherResponse is null");
-//            }
-
             Location location = Location.builder()
                     .name(locationCommand.getName())
                     .latitude(locationCommand.getLatitude())
@@ -71,14 +64,10 @@ public class LocationService {
     }
 
     public List<LocationDTO> findLocation(String locationName) {
-        String editedLocationName = locationName.toLowerCase().trim();
-        String url = String.format(Consts.LOCATION_SEARCH_URL, editedLocationName, API_KEY);
+        locationName = locationName.toLowerCase().trim();
+        String url = String.format(Consts.LOCATION_SEARCH_URL, locationName, API_KEY);
 
         LocationResponse[] response = restTemplate.getForObject(url, LocationResponse[].class);
-
-        if (response == null) {
-            throw new RuntimeException("LocationResponse is null for  " + editedLocationName);
-        }
 
         List<LocationDTO> locationList = new ArrayList<>();
         for (LocationResponse locationResponse : response) {

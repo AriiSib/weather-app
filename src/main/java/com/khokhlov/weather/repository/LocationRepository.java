@@ -14,13 +14,6 @@ public class LocationRepository {
 
     private final SessionFactory sessionFactory;
 
-//    public List<Location> findByUserId(Integer userId) {
-//        return sessionFactory.getCurrentSession()
-//                .createQuery("SELECT l FROM Location l JOIN l.users u WHERE u.id = :userId", Location.class)
-//                .setParameter("userId", userId)
-//                .getResultList();
-//    }
-
     public Location findById(Integer locationId) {
         return sessionFactory.getCurrentSession().get(Location.class, locationId);
     }
