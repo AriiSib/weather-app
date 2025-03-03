@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableTransactionManagement
-@PropertySource("classpath:application-${spring.profiles.active}.properties")
+@PropertySource("classpath:application-${spring.profiles.active:prod}.properties")
 public class DatabaseConfig {
 
     private final Environment env;
@@ -44,10 +44,10 @@ public class DatabaseConfig {
         return new HikariDataSource(config);
     }
 
-    @Profile("dev")
+    @Profile({"dev", "default", "test"})
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
-        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "8082");
+        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
     }
 
     @Bean
