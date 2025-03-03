@@ -37,7 +37,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "location_id")
     )
+
     @ToString.Exclude
+    @Builder.Default
     private List<Location> locations = new ArrayList<>();
 
     @CreationTimestamp
