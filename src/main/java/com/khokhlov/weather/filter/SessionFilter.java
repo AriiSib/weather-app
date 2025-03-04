@@ -3,6 +3,7 @@ package com.khokhlov.weather.filter;
 import com.khokhlov.weather.model.entity.Session;
 import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.service.SessionService;
+import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -15,42 +16,31 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
 
 @Component
+@NonNullApi
 @RequiredArgsConstructor
 public class SessionFilter extends OncePerRequestFilter {
 
     private final SessionService sessionService;
-
-    private static final List<String> EXCLUDED_PATHS = List.of("/auth/login", "/auth/register");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getServletPath();
 
-        if (EXCLUDED_PATHS.contains(path)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        Cookie[] cookies = request.getCookies();
-        String sessionId = null;
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("SESSION_ID".equals(cookie.getName())) {
-                    sessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String sessionId = Optional.ofNullable(request.getCookies())
+                .stream()
+                .flatMap(Arrays::stream)
+                .filter(cookie -> "SESSION_ID".equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
 
         if (sessionId == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
@@ -67,13 +57,13 @@ public class SessionFilter extends OncePerRequestFilter {
         }
 
 
-        Optional<Session> session = sessionService.findSessionById(uuid);
-        if (session.isEmpty() || session.get().getExpiresAt().isBefore(LocalDateTime.now())) {
+        Session session = sessionService.findSessionById(uuid).orElse(null);
+        if (session == null || session.getExpiresAt().isBefore(LocalDateTime.now())) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
-        User user = session.get().getUser();
+        User user = session.getUser();
 
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute("user", user);

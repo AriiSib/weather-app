@@ -49,6 +49,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         FilterRegistration.Dynamic filter = servletContext.addFilter("sessionFilter",
                 new DelegatingFilterProxy());
         filter.addMappingForUrlPatterns(null, false, "/index");
+        filter.addMappingForUrlPatterns(null, false, "/location/search");
 
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
