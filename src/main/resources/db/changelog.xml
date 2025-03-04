@@ -8,14 +8,4 @@
     <include file="/db/changelog/version_1_0/initial_locations.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/version_1_0/initial_sessions.xml" relativeToChangelogFile="false"/>
 
-    <!--    <changeSet id="1" author="user">-->
-    <!--        <createTable tableName="weather">-->
-    <!--            <column name="id" type="BIGINT" autoIncrement="true">-->
-    <!--                <constraints primaryKey="true"/>-->
-    <!--            </column>-->
-    <!--            <column name="city" type="VARCHAR(255)"/>-->
-    <!--            <column name="temperature" type="DOUBLE"/>-->
-    <!--        </createTable>-->
-    <!--    </changeSet>-->
-
 </databaseChangeLog>

@@ -44,7 +44,7 @@ public class DatabaseConfig {
         return new HikariDataSource(config);
     }
 
-    @Profile({"dev", "default", "test"})
+    @Profile({"dev", "test"})
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
@@ -78,12 +78,12 @@ public class DatabaseConfig {
         return transactionManager;
     }
 
-//    @Bean
-//    public SpringLiquibase liquibase(DataSource dataSource) {
-//        SpringLiquibase liquibase = new SpringLiquibase();
-//        liquibase.setDataSource(dataSource);
-//        liquibase.setChangeLog("classpath:db/changelog.xml");
-//        return liquibase;
-//    }
+    @Bean
+    public SpringLiquibase liquibase(DataSource dataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDataSource(dataSource);
+        liquibase.setChangeLog("classpath:db/changelog.xml");
+        return liquibase;
+    }
 
 }
