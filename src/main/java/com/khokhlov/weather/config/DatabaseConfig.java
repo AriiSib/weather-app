@@ -78,6 +78,7 @@ public class DatabaseConfig {
         return transactionManager;
     }
 
+    @Profile({"prod", "default"})
     @Bean
     public SpringLiquibase liquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();

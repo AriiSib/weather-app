@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: weather-db
+    restart: always
+    environment:
+      POSTGRES_DB: "weatherdb"
+      POSTGRES_USER: "weather"
+      POSTGRES_PASSWORD: "secret"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - weather-network
+
+  liquibase:
+    container_name: weather-liquibase
+#    image: ariisib/weather-liquibase:latest
+    build:
+      dockerfile: DockerfileLB
+    environment:
+      DB_URL: "jdbc:postgresql://db:5432/weatherdb"
+      DB_USERNAME: "weather"
+      DB_PASSWORD: "secret"
+    depends_on:
+      - db
+    networks:
+      - weather-network
+
+  weather:
+    container_name: weather-app
+#    image: ariisib/weather-app:latest
+    build:
+      dockerfile: DockerfileApp
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: "jdbc:postgresql://db:5432/weatherdb"
+      DB_USERNAME: "weather"
+      DB_PASSWORD: "secret"
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+
+    networks:
+      - weather-network
+
+volumes:
+  postgres-data:
+
+networks:
+  weather-network:

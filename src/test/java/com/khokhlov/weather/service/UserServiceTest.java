@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles(profiles = "test")
+@TestPropertySource(properties = "spring.profiles.active=test")
 @ContextConfiguration(classes = {ApplicationConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional

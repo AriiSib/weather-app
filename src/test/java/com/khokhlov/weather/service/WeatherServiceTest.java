@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.ExpectedCount;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles(profiles = "test")
+@TestPropertySource(properties = "spring.profiles.active=test")
 @ContextConfiguration(classes = {ApplicationConfig.class})
 class WeatherServiceTest {
 
