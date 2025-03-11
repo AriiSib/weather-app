@@ -35,8 +35,4 @@ public class LocationRepository {
     public void save(Location location) {
         sessionFactory.getCurrentSession().persist(location);
     }
-
-    public void deleteLocation(Location locationToDelete) {
-        sessionFactory.getCurrentSession().remove(locationToDelete);
-    }
 }

@@ -36,9 +36,14 @@ public class LocationService {
 
         String locationName = locationCommand.getName().trim();
 
-        Optional<Location> existingLocation = locationRepository.findByNameAndCoordinates(locationName, locationCommand.getLatitude(), locationCommand.getLongitude());
+        Location existingLocation = locationRepository.findByNameAndCoordinates(locationName, locationCommand.getLatitude(), locationCommand.getLongitude()).orElse(null);
 
-        if (existingLocation.isEmpty()) {
+        if (existingLocation != null && !user.getLocations().contains(existingLocation)) {
+            user.getLocations().add(existingLocation);
+            return;
+        }
+
+        if (existingLocation == null) {
             Location location = Location.builder()
                     .name(locationCommand.getName())
                     .latitude(locationCommand.getLatitude())
@@ -46,9 +51,7 @@ public class LocationService {
                     .build();
             locationRepository.save(location);
 
-            if (!user.getLocations().contains(location)) {
-                user.getLocations().add(location);
-            }
+            user.getLocations().add(location);
         }
     }
 
@@ -58,8 +61,6 @@ public class LocationService {
                 .orElseThrow(() -> new RuntimeException("username not found"));
 
         Location locationToDelete = locationRepository.findById(locationId);
-        locationRepository.deleteLocation(locationToDelete);
-
         user.getLocations().remove(locationToDelete);
     }
 
