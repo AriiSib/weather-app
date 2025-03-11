@@ -28,7 +28,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User loginUser(UserCommand userCommand) {
-        User user = userRepository.findByUsername(userCommand.getUsername())
+        User user = userRepository.findByUsername(userCommand.getUsername().toLowerCase())
                 .orElseThrow(() -> new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError"));
 
         if (!passwordEncoder.matches(userCommand.getPassword(), user.getPassword())) {
@@ -41,6 +41,8 @@ public class UserService {
     @Transactional
     public void registerUser(UserRegisterCommand userRegisterCommand) {
         UserRegisterValidation.validate(userRegisterCommand);
+
+        userRegisterCommand.setUsername(userRegisterCommand.getUsername().toLowerCase());
 
         User userToSave = userMapper.toUser(userRegisterCommand);
         userToSave.setPassword(passwordEncoder.encode(userRegisterCommand.getPassword()));
