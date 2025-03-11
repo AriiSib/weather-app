@@ -4,51 +4,43 @@ services:
     container_name: weather-db
     restart: always
     environment:
-      POSTGRES_DB: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - weather-network
-
-  liquibase:
-    container_name: weather-liquibase
-#    image: ariisib/weather-liquibase:latest
-    build:
-      dockerfile: DockerfileLB
-    environment:
-      DB_URL: "jdbc:postgresql://db:5432/postgres"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "postgres"
-    depends_on:
-      - db
-    networks:
-      - weather-network
+      - weather_network
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   weather:
     container_name: weather-app
-#    image: ariisib/weather-app:latest
+    image: ariisib/weather-app:1.0.0
+    restart: always
     build:
-      dockerfile: DockerfileApp
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      DB_URL: "jdbc:postgresql://db:5432/postgres"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "postgres"
+      DB_URL: ${DB_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      WEATHER_API_KEY: ${WEATHER_API_KEY}
       SPRING_PROFILES_ACTIVE: prod
     depends_on:
-      liquibase:
-        condition: service_completed_successfully
-
+      db:
+        condition: service_healthy
     networks:
-      - weather-network
+      - weather_network
 
 volumes:
-  postgres-data:
+  postgres_data:
 
 networks:
-  weather-network:
+  weather_network:

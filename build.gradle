@@ -8,18 +8,6 @@ war {
     archiveFileName = 'weather-app.war'
 }
 
-liquibase {
-    activities {
-        main {
-            changelogFile 'src/main/resources/db/changelog.xml'
-            url "jdbc:postgresql://localhost:5432/postgres"
-            username "postgres"
-            password "postgres"
-            driver "org.postgresql.Driver"
-        }
-    }
-}
-
 group = 'com.khokhlov'
 version = '1.0'
 

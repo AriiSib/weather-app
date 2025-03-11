@@ -1,7 +1,0 @@
-FROM tomcat:10.1.24-jdk21
-
-WORKDIR /usr/local/tomcat
-
-COPY build/libs/weather-app.war webapps/weather-app.war
-
-CMD ["catalina.sh", "run"]
