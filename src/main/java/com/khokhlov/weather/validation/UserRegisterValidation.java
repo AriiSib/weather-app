@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class UserRegisterValidation {
 
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+$";
     private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9#*!]+$";
 
@@ -21,7 +22,9 @@ public class UserRegisterValidation {
     }
 
     private static void validateUsernamePattern(String username) {
-        if (!Pattern.matches(USERNAME_PATTERN, username)) {
+        if (Pattern.matches(USERNAME_PATTERN, username) || Pattern.matches(EMAIL_PATTERN, username)) {
+            return;
+        } else {
             throw new InvalidLoginOrPasswordException("Username should contain only letters and numbers", "usernameError");
         }
     }
