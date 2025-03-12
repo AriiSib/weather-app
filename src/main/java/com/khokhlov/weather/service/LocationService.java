@@ -9,6 +9,7 @@ import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.LocationRepository;
 import com.khokhlov.weather.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LocationService {
@@ -32,7 +33,10 @@ public class LocationService {
     @Transactional
     public void addLocation(User user, LocationCommand locationCommand) {
         user = userRepository.findByUsername(user.getUsername())
-                .orElseThrow(() -> new RuntimeException("username not found"));
+                .orElseThrow(() -> {
+                    log.warn("Error when adding location: {}", locationCommand.getName());
+                    return new RuntimeException("username not found");
+                });
 
         String locationName = locationCommand.getName().trim();
 
@@ -58,7 +62,10 @@ public class LocationService {
     @Transactional
     public void deleteLocation(User user, Integer locationId) {
         user = userRepository.findByUsername(user.getUsername())
-                .orElseThrow(() -> new RuntimeException("username not found"));
+                .orElseThrow(() -> {
+                    log.warn("Error when deleting location: {}", locationId);
+                    return new RuntimeException("username not found");
+                });
 
         Location locationToDelete = locationRepository.findById(locationId);
         user.getLocations().remove(locationToDelete);
