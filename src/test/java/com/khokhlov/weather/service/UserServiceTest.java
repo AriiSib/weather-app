@@ -16,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -28,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties = "spring.profiles.active=test")
 @ContextConfiguration(classes = {ApplicationConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Transactional
 class UserServiceTest {
 
     @Autowired
@@ -47,11 +45,12 @@ class UserServiceTest {
     @Test
     void Should_RegisterUser_When_DataIsValid() {
         UserRegisterCommand userRegisterCommand = new UserRegisterCommand("testUser", "testPassword", "testPassword");
+        UserCommand userCommand = new UserCommand("testUser", "testPassword");
 
         userService.registerUser(userRegisterCommand);
-        User user = userRepository.findByUsername("testUser").orElseThrow();
+        User user = userService.loginUser(userCommand);
 
-        assertEquals("testUser", user.getUsername());
+        assertEquals("testUser".toLowerCase(), user.getUsername());
         assertTrue(passwordEncoder.matches("testPassword", user.getPassword()));
     }
 
@@ -86,7 +85,7 @@ class UserServiceTest {
 
         assertNotNull(user);
         assertNotNull(session);
-        assertEquals(userCommand.getUsername(), userRepository.findByUsername(userCommand.getUsername()).orElseThrow().getUsername());
+        assertEquals(userCommand.getUsername().toLowerCase(), user.getUsername());
         assertEquals(session, sessionService.findSessionById(UUID.fromString(session)).orElseThrow().getId().toString());
     }
 

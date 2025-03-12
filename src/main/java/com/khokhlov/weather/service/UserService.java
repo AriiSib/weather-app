@@ -30,7 +30,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User loginUser(UserCommand userCommand) {
-        User user = userRepository.findByUsername(userCommand.getUsername().toLowerCase())
+        String username = userCommand.getUsername().toLowerCase();
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     log.warn("Username {} not found", userCommand.getUsername());
                     return new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError");
