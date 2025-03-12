@@ -10,12 +10,14 @@ import com.khokhlov.weather.model.entity.User;
 import com.khokhlov.weather.repository.UserRepository;
 import com.khokhlov.weather.validation.UserRegisterValidation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -29,9 +31,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public User loginUser(UserCommand userCommand) {
         User user = userRepository.findByUsername(userCommand.getUsername().toLowerCase())
-                .orElseThrow(() -> new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError"));
+                .orElseThrow(() -> {
+                    log.warn("Username {} not found", userCommand.getUsername());
+                    return new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError");
+                });
 
         if (!passwordEncoder.matches(userCommand.getPassword(), user.getPassword())) {
+            log.warn("Login error: invalid password for user: {}", userCommand.getUsername());
             throw new InvalidLoginOrPasswordException("Wrong password", "passwordError");
         }
 

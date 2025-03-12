@@ -9,11 +9,12 @@ import com.khokhlov.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class UserAuthController {
 
     @GetMapping("/login")
     public String showLoginPage() {
+        log.debug("GET /auth/login - Show login page");
         return "sign-in";
     }
 
@@ -33,6 +35,8 @@ public class UserAuthController {
                             @RequestParam("password") String password,
                             HttpServletResponse response,
                             Model model) {
+        log.info("POST /auth/login - Attempting to login user");
+
         User user = null;
         try {
             user = userService.loginUser(new UserCommand(username, password));
@@ -48,6 +52,7 @@ public class UserAuthController {
         }
         createSessionAndCookie(response, user);
 
+        log.info("POST /auth/login - User: {} successfully logged", user.getUsername());
         return "redirect:/index";
     }
 
@@ -59,11 +64,14 @@ public class UserAuthController {
         }
 
         deleteCookie(response);
+
+        log.debug("GET /auth/logout - User logged out with SESSION_ID: {}", sessionID);
         return "redirect:/auth/login";
     }
 
     @GetMapping("/register")
     public String showRegisterPage() {
+        log.debug("GET /auth/register - Show register page");
         return "sign-up";
     }
 
@@ -72,6 +80,8 @@ public class UserAuthController {
                                @RequestParam("password") String password,
                                @RequestParam("repeat-password") String repeatPassword,
                                Model model) {
+        log.info("POST /auth/register - Attempting to register user");
+
         try {
             userService.registerUser(new UserRegisterCommand(username, password, repeatPassword));
         } catch (InvalidLoginOrPasswordException e) {
@@ -84,6 +94,7 @@ public class UserAuthController {
             return "sign-up";
         }
 
+        log.info("POST /auth/register - User: {} successfully registered", username);
         return "redirect:/auth/login";
     }
 

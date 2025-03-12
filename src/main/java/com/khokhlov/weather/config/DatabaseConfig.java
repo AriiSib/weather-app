@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableTransactionManagement
-@PropertySource("classpath:application-${spring.profiles.active:prod}.properties")
+@PropertySource("classpath:application-${spring.profiles.active:dev}.properties")
 public class DatabaseConfig {
 
     private final Environment env;
