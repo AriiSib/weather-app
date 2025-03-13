@@ -12,5 +12,4 @@ public interface UserMapper {
     UserDTO toUserDTO(User user);
 
     User toUser(UserRegisterCommand userRegisterCommand);
-
 }

@@ -84,6 +84,7 @@ public class DatabaseConfig {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:db/changelog.xml");
+
         return liquibase;
     }
 

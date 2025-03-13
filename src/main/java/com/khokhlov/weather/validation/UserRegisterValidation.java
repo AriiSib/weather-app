@@ -56,5 +56,4 @@ public class UserRegisterValidation {
             throw new InvalidLoginOrPasswordException("Passwords don't match", "passwordError");
         }
     }
-
 }

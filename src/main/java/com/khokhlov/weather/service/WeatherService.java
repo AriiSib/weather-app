@@ -37,13 +37,13 @@ public class WeatherService {
 
             log.info("Successfully get weather data from weather api query");
             return WeatherDTO.builder()
-                    .cityName(response.getLocationName())
-                    .countryName(response.getSys().getCountry())
-                    .temperature((byte) Math.round(response.getMain().getTemp()))
-                    .feelsLike((byte) Math.round(response.getMain().getFeelsLike()))
-                    .description(response.getWeather().getFirst().getDescription())
-                    .humidity(response.getMain().getHumidity())
-                    .icon(response.getWeather().getFirst().getIcon())
+                    .cityName(response.locationName())
+                    .countryName(response.sys().country())
+                    .temperature((byte) Math.round(response.main().temp()))
+                    .feelsLike((byte) Math.round(response.main().feelsLike()))
+                    .description(response.weather().getFirst().description())
+                    .humidity(response.main().humidity())
+                    .icon(response.weather().getFirst().icon())
                     .build();
 
         } catch (HttpStatusCodeException e) {

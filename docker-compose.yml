@@ -32,7 +32,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       WEATHER_API_KEY: ${WEATHER_API_KEY}
-      LOGGING_FILE: "/var/log/weather-app.log"
       SPRING_PROFILES_ACTIVE: prod
     depends_on:
       db:

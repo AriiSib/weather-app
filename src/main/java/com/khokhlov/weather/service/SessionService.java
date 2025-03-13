@@ -39,7 +39,6 @@ public class SessionService {
         try {
             sessionRepository.deleteSession(UUID.fromString(sessionID));
         } catch (NoSuchElementException ignored) {
-
         }
     }
 }

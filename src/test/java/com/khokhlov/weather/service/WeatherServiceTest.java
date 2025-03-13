@@ -96,5 +96,4 @@ class WeatherServiceTest {
 
         assertTrue(exception.getMessage().contains("500"));
     }
-
 }

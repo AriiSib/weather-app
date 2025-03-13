@@ -72,6 +72,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCacheable(true);
+
         return templateResolver;
     }
 
@@ -91,6 +92,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
+
         return templateEngine;
     }
 
@@ -99,6 +101,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
         viewResolver.setCharacterEncoding("UTF-8");
+
         return viewResolver;
     }
 

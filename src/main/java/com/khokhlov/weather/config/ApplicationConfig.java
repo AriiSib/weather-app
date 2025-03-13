@@ -8,6 +8,4 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 @ComponentScan(basePackages = "com.khokhlov.weather")
-public class ApplicationConfig {
-
-}
+public class ApplicationConfig {}

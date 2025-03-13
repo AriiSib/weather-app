@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationDTO {
-    Integer id;
-    String name;
-    String country;
-    String state;
-    Double latitude;
-    Double longitude;
+    private Integer id;
+    private String name;
+    private String country;
+    private String state;
+    private Double latitude;
+    private Double longitude;
 }

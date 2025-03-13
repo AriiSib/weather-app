@@ -1,47 +1,35 @@
 package com.khokhlov.weather.model.apiweather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class WeatherResponse {
-    @JsonProperty("name")
-    private String locationName;
-    private Coord coord;
-    private List<Weather> weather;
-    private Main main;
-    private Sys sys;
 
-    @Data
-    public static class Coord {
-        private Double lon;
-        private Double lat;
-    }
+public record WeatherResponse(
+        @JsonProperty("name") String locationName,
+        Coord coord,
+        List<Weather> weather,
+        Main main,
+        Sys sys
+) {
+    public record Coord(
+            Double lon,
+            Double lat
+    ) {}
 
-    @Data
-    public static class Weather {
-        private String main;
-        private String description;
-        private String icon;
-    }
+    public record Weather(
+            String main,
+            String description,
+            String icon
+    ) {}
 
-    @Data
-    public static class Main {
-        private Double temp;
+    public record Main(
+            Double temp,
+            @JsonProperty("feels_like") Double feelsLike,
+            Integer humidity
+    ) {}
 
-        @JsonProperty("feels_like")
-        private Double feelsLike;
-        private Integer humidity;
-    }
-
-    @Data
-    public static class Sys {
-        private String country;
-    }
+    public record Sys(
+            String country
+    ) {}
 }

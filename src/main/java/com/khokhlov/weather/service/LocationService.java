@@ -34,13 +34,13 @@ public class LocationService {
     public void addLocation(User user, LocationCommand locationCommand) {
         user = userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> {
-                    log.warn("Error when adding location: {}", locationCommand.getName());
+                    log.warn("Error when adding location: {}", locationCommand.name());
                     return new RuntimeException("username not found");
                 });
 
-        String locationName = locationCommand.getName().trim();
+        String locationName = locationCommand.name().trim();
 
-        Location existingLocation = locationRepository.findByNameAndCoordinates(locationName, locationCommand.getLatitude(), locationCommand.getLongitude()).orElse(null);
+        Location existingLocation = locationRepository.findByNameAndCoordinates(locationName, locationCommand.latitude(), locationCommand.longitude()).orElse(null);
 
         if (existingLocation != null && !user.getLocations().contains(existingLocation)) {
             user.getLocations().add(existingLocation);
@@ -49,9 +49,9 @@ public class LocationService {
 
         if (existingLocation == null) {
             Location location = Location.builder()
-                    .name(locationCommand.getName())
-                    .latitude(locationCommand.getLatitude())
-                    .longitude(locationCommand.getLongitude())
+                    .name(locationCommand.name())
+                    .latitude(locationCommand.latitude())
+                    .longitude(locationCommand.longitude())
                     .build();
             locationRepository.save(location);
 
@@ -80,11 +80,11 @@ public class LocationService {
         List<LocationDTO> locationList = new ArrayList<>();
         for (LocationResponse locationResponse : response) {
             LocationDTO location = LocationDTO.builder()
-                    .name(locationResponse.getLocationName())
-                    .state(locationResponse.getState())
-                    .country(locationResponse.getCountry())
-                    .latitude(locationResponse.getLat())
-                    .longitude(locationResponse.getLon())
+                    .name(locationResponse.locationName())
+                    .state(locationResponse.state())
+                    .country(locationResponse.country())
+                    .latitude(locationResponse.lat())
+                    .longitude(locationResponse.lon())
                     .build();
 
             locationList.add(location);

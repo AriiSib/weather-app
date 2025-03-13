@@ -33,7 +33,6 @@ public class SessionFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-
         String sessionId = Optional.ofNullable(request.getCookies())
                 .stream()
                 .flatMap(Arrays::stream)
@@ -47,7 +46,6 @@ public class SessionFilter extends OncePerRequestFilter {
             return;
         }
 
-
         UUID uuid;
         try {
             uuid = UUID.fromString(sessionId);
@@ -55,7 +53,6 @@ public class SessionFilter extends OncePerRequestFilter {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
-
 
         Session session = sessionService.findSessionById(uuid).orElse(null);
         if (session == null || session.getExpiresAt().isBefore(LocalDateTime.now())) {

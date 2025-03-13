@@ -5,7 +5,6 @@ import com.khokhlov.weather.exception.InvalidLoginOrPasswordException;
 import com.khokhlov.weather.model.command.UserCommand;
 import com.khokhlov.weather.model.command.UserRegisterCommand;
 import com.khokhlov.weather.model.entity.User;
-import com.khokhlov.weather.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {ApplicationConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserServiceTest {
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     UserService userService;
@@ -85,7 +81,7 @@ class UserServiceTest {
 
         assertNotNull(user);
         assertNotNull(session);
-        assertEquals(userCommand.getUsername().toLowerCase(), user.getUsername());
+        assertEquals(userCommand.username().toLowerCase(), user.getUsername());
         assertEquals(session, sessionService.findSessionById(UUID.fromString(session)).orElseThrow().getId().toString());
     }
 
@@ -109,7 +105,6 @@ class UserServiceTest {
         InvalidLoginOrPasswordException exception =
                 assertThrows(InvalidLoginOrPasswordException.class, () -> userService.loginUser(userInvalidCommand));
 
-        assertEquals("User with username \"" + userInvalidCommand.getUsername() + "\" does not exist", exception.getMessage());
+        assertEquals("User with username \"" + userInvalidCommand.username() + "\" does not exist", exception.getMessage());
     }
-
 }

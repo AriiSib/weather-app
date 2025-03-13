@@ -27,18 +27,17 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final LocationMapper locationMapper;
 
-
     @Transactional(readOnly = true)
     public User loginUser(UserCommand userCommand) {
-        String username = userCommand.getUsername().toLowerCase();
+        String username = userCommand.username().toLowerCase();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    log.warn("Username {} not found", userCommand.getUsername());
-                    return new InvalidLoginOrPasswordException("User with username \"" + userCommand.getUsername() + "\" does not exist", "usernameError");
+                    log.warn("Username {} not found", userCommand.username());
+                    return new InvalidLoginOrPasswordException("User with username \"" + userCommand.username() + "\" does not exist", "usernameError");
                 });
 
-        if (!passwordEncoder.matches(userCommand.getPassword(), user.getPassword())) {
-            log.warn("Login error: invalid password for user: {}", userCommand.getUsername());
+        if (!passwordEncoder.matches(userCommand.password(), user.getPassword())) {
+            log.warn("Login error: invalid password for user: {}", userCommand.username());
             throw new InvalidLoginOrPasswordException("Wrong password", "passwordError");
         }
 
@@ -62,5 +61,4 @@ public class UserService {
                 .map(locationMapper::toLocationDTO)
                 .toList();
     }
-
 }

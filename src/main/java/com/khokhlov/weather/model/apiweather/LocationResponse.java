@@ -1,18 +1,11 @@
 package com.khokhlov.weather.model.apiweather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class LocationResponse {
-    @JsonProperty("name")
-    private String locationName;
-    private Double lat;
-    private Double lon;
-    private String country;
-    private String state;
-}
+public record LocationResponse(
+        @JsonProperty("name") String locationName,
+        Double lat,
+        Double lon,
+        String country,
+        String state
+) {}

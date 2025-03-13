@@ -10,7 +10,6 @@ import com.khokhlov.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,7 +21,6 @@ public class UserRestAuthController {
     private final UserService userService;
     private final SessionService sessionService;
     private final UserMapper userMapper;
-
 
     @PostMapping("/login")
     public UserDTO loginUser(@RequestBody UserCommand userCommand,
