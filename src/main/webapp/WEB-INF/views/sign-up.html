@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" th:href="@{/resources/images/favicon.ico}" type="image/x-icon">
+    <meta charset="UTF-8">
+    <title>Weather Viewer – Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/resources/styles/style.css}"/>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="weather-logo"></div>
+        </div>
+    </div>
+
+    <h2 class="text-center mb-5">Sign Up</h2>
+
+    <div class="row justify-content-center" th:if="${errorMessage}">
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <div class="alert alert-danger" role="alert" th:text="${errorMessage}">
+                Error when registering
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <form th:action="@{/auth/register}" method="post" class="mt-4">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group has-validation">
+                        <input type="text"
+                               class="form-control"
+                               th:classappend="${usernameError} ? ' is-invalid' : ''"
+                               id="username"
+                               name="username"
+                               required
+                               th:value="${username}"/>
+                        <div class="invalid-feedback"
+                             th:if="${usernameError}"
+                             th:text="${usernameError}">
+                            Account with this username already exists
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group has-validation">
+                        <input type="password"
+                               class="form-control"
+                               th:classappend="${passwordError} ? ' is-invalid' : ''"
+                               id="password"
+                               name="password"
+                               required
+                               th:value="${password}"/>
+                        <div class="invalid-feedback"
+                             th:if="${passwordError}"
+                             th:text="${passwordError}">
+                            Password must be at least 4 characters long
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="repeat-password" class="form-label">Repeat password</label>
+                    <input type="password"
+                           class="form-control"
+                           th:classappend="${passwordError} ? ' is-invalid' : ''"
+                           id="repeat-password"
+                           name="repeat-password"
+                           required
+                           th:value="${repeatPassword}"/>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+                <p class="mt-2 text-center">Already have an account?
+                    <a th:href="@{/auth/login}">Sign in here</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
